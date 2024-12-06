@@ -1,0 +1,96 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+jobs:
+  linting_and_commit_message:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+        # Step 2: set up node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+
+        # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+        #  Step 4: Run commit message linting
+      - name: Commit Message Lint
+        run: npx commitlint --from=${{github.event.before}} --to=HEAD
+
+        # Step 5: Run linting (eslint or other linters)
+      - name: Run Linting
+        run: npm run lint
+        
+  test_and_validate:
+    runs-on: ubuntu-latest
+    steps:
+      # step 1: checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # step 2: set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+      # Step 4: Run tests with Jest
+      - name: Run Unit Tests
+        run: npm test
+
+      # Step 5: Validate .env file
+      - name: Validate .env File
+        run: bash scripts/validate_env.sh
+  docker_build_and_push:
+    runs-on: ubuntu-latest
+    needs: [test_and_validate]
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # Step 2: Set up Node.js
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Log in to Docker Hub (using secrets for credentials)
+      - name: Log in to Docker hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build Docker image
+        run: docker push ${{secrets.DOCKER_USERNAME}}/todo-app:$GITHUB_SHA
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [docker_build_and_push]
+    steps:
+      - name: Deploy to AWS
+        run: |
+          echo "Deploying to AWS..."
+    
+      
+        
