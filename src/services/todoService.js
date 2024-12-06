@@ -1,7 +1,7 @@
 import pool from '../config/database.js';
 
 export const TodoService = {
-  async createTodo(title, description, priority, dueDate, completed, category) {
+  async createTodo(title, description, priority = 'low', dueDate, completed = false, category) {
     try {
       const query = 'INSERT INTO todos (title, description, priority, dueDate, completed, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
       const { rows } = await pool.query(query, [title, description, priority, dueDate, completed, category]);
