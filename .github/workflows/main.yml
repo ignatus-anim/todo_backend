@@ -39,19 +39,37 @@ jobs:
   test_and_validate:
     runs-on: ubuntu-latest
     steps:
-      # step 1: checkout code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
-      # step 2: set up Node.js
+
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.10.0'
+
       # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
-      # Step 4: Run tests with Jest
+
+      # Step 4: Set environment variables for database connection
+      - name: Export Database Credentials
+        run: |
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+
+      # Step 5: Run tests with Jest
       - name: Run Unit Tests
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PORT: ${{ secrets.DB_PORT }}
         run: npm test
 
       # Step 5: Validate .env file
