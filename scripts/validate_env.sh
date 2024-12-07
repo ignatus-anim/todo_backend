@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if required environment variables are set
-REQUIRED_VARS=("DB_HOST" "DB_PORT" "DB_NAME" "DB_USER" "DB_PASSWORD")
+REQUIRED_VARS=("DB_HOST" "DB_PORT" "DB_NAME" "DB_USER" "DB_PASSWORD" "DOCKER_USERNAME" "DOCKER_PASSWORD")
 
 # Iterate over the required variables and check if they are set
 for var in "${REQUIRED_VARS[@]}"; do
