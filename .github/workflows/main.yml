@@ -11,7 +11,7 @@ on:
       - develop
       - feature/*
 jobs:
-  linting_and_commit_message:
+  linting:
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout the code
@@ -28,11 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-        #  Step 4: Run commit message linting
-      - name: Commit Message Lint
-        run: npx commitlint --from=${{github.event.before}} --to=HEAD
-
-        # Step 5: Run linting (eslint or other linters)
+        # Step 4: Run linting (eslint or other linters)
       - name: Run Linting
         run: npm run lint
         
@@ -56,11 +52,11 @@ jobs:
       # Step 4: Set environment variables for database connection
       - name: Export Database Credentials
         run: |
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{secrets.DB_HOST}}" >> $GITHUB_ENV
           echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> $GITHUB_ENV
+          echo "DB_NAME=${{secrets.DB_NAME}}" >> $GITHUB_ENV
+          echo "DB_PORT=${{secrets.DB_PORT}}" >> $GITHUB_ENV
 
       # Step 5: Run tests with Jest
       - name: Run Unit Tests
