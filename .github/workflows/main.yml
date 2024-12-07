@@ -49,11 +49,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Validate .env file
-      - name: Validate .env File
-        run: bash scripts/validate_env.sh
-
-      # Step 5: Set environment variables for database connection
+      # Step 4: Set environment variables for database connection
       - name: Export Database Credentials
         run: |
           echo "DB_HOST=${{secrets.DB_HOST}}" >> $GITHUB_ENV
@@ -61,6 +57,11 @@ jobs:
           echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> $GITHUB_ENV
           echo "DB_NAME=${{secrets.DB_NAME}}" >> $GITHUB_ENV
           echo "DB_PORT=${{secrets.DB_PORT}}" >> $GITHUB_ENV
+          echo "DOCKER_USERNAME=${{secrets.DOCKER_USERNAME}}" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=${{secrets.DOCKER_PASSWORD}}" >> $GITHUB_ENV
+      # Step 5: Validate .env file
+      - name: Validate .env File
+        run: bash scripts/validate_env.sh
       # Step 6: Run tests with Jest
       - name: Run Unit Tests
         env:
