@@ -96,8 +96,12 @@ jobs:
         with:
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_PASSWORD}}
-
-      - name: Build Docker image
+      # Step 5: Build Docker image
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA .
+      
+        # Step 6: Push Docker image
+      - name: Push Docker image
         run: docker push ${{secrets.DOCKER_USERNAME}}/todo-app:$GITHUB_SHA
   deploy:
     runs-on: ubuntu-latest
