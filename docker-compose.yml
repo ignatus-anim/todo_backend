@@ -7,8 +7,7 @@ services:
       dockerfile: dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      -./src:/app
+    volumes: -./src:/app
     environment:
       - NODE_ENV=development
       - DB_HOST=${DB_HOST}
@@ -16,4 +15,3 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
-    

@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.10.0'
+          node-version: "20.10.0"
 
         # Step 3: Install dependencies
       - name: Install dependencies
@@ -31,7 +31,7 @@ jobs:
         # Step 4: Run linting (eslint or other linters)
       - name: Run Linting
         run: npm run lint
-        
+
   test_and_validate:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.10.0'
+          node-version: "20.10.0"
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -84,7 +84,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.10.0'
+          node-version: "20.10.0"
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -99,7 +99,7 @@ jobs:
       # Step 5: Build Docker image
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA .
-      
+
         # Step 6: Push Docker image
       - name: Push Docker image
         run: docker push ${{secrets.DOCKER_USERNAME}}/todo-app:$GITHUB_SHA
@@ -110,6 +110,3 @@ jobs:
       - name: Deploy to AWS
         run: |
           echo "Deploying to AWS..."
-    
-      
-        

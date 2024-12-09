@@ -1,48 +1,74 @@
-import pool from '../config/database.js';
+import pool from "../config/database.js";
 
 export const TodoService = {
-  async createTodo(title, description, priority = 'low', dueDate, completed = false, category) {
+  async createTodo(
+    title,
+    description,
+    priority = "low",
+    dueDate,
+    completed = false,
+    category,
+  ) {
     try {
-      const query = 'INSERT INTO todos (title, description, priority, dueDate, completed, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-      const { rows } = await pool.query(query, [title, description, priority, dueDate, completed, category]);
+      const query =
+        "INSERT INTO todos (title, description, priority, dueDate, completed, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+      const { rows } = await pool.query(query, [
+        title,
+        description,
+        priority,
+        dueDate,
+        completed,
+        category,
+      ]);
       return rows[0];
     } catch (error) {
-      console.error('Error creating todo:', error);
+      console.error("Error creating todo:", error);
       throw error;
     }
   },
 
-  async getAllTodos(page = 1, limit = 10, sortBy = 'created_at', sortOrder = 'DESC') {
+  async getAllTodos(
+    page = 1,
+    limit = 10,
+    sortBy = "created_at",
+    sortOrder = "DESC",
+  ) {
     try {
-        const offset = (page - 1) * limit;
+      const offset = (page - 1) * limit;
 
-        // Sanitize inputs
-        const validColumns = ['created_at', 'title', 'id', 'updated_at'];
-        const validSortOrders = ['ASC', 'DESC'];
-        const sanitizedSortBy = validColumns.includes(sortBy) ? sortBy : 'created_at';
-        const sanitizedSortOrder = validSortOrders.includes(sortOrder.toUpperCase()) ? sortOrder : 'DESC';
+      // Sanitize inputs
+      const validColumns = ["created_at", "title", "id", "updated_at"];
+      const validSortOrders = ["ASC", "DESC"];
+      const sanitizedSortBy = validColumns.includes(sortBy)
+        ? sortBy
+        : "created_at";
+      const sanitizedSortOrder = validSortOrders.includes(
+        sortOrder.toUpperCase(),
+      )
+        ? sortOrder
+        : "DESC";
 
-        // SQL query
-        const query = `
+      // SQL query
+      const query = `
             SELECT * FROM todos 
             ORDER BY ${sanitizedSortBy} ${sanitizedSortOrder}
             LIMIT $1 OFFSET $2
         `;
-        const { rows } = await pool.query(query, [limit, offset]);
-        return rows;
+      const { rows } = await pool.query(query, [limit, offset]);
+      return rows;
     } catch (error) {
-        console.error('Error getting todos:', error);
-        throw error;
+      console.error("Error getting todos:", error);
+      throw error;
     }
-},
+  },
 
   async getTodoById(id) {
     try {
-      const query = 'SELECT * FROM todos WHERE id = $1';
+      const query = "SELECT * FROM todos WHERE id = $1";
       const { rows } = await pool.query(query, [id]);
       return rows[0];
     } catch (error) {
-      console.error('Error getting todo by id:', error);
+      console.error("Error getting todo by id:", error);
       throw error;
     }
   },
@@ -58,18 +84,18 @@ export const TodoService = {
       const { rows } = await pool.query(query, [id, title, description]);
       return rows[0];
     } catch (error) {
-      console.error('Error updating todo:', error);
+      console.error("Error updating todo:", error);
       throw error;
     }
   },
 
   async deleteTodo(id) {
     try {
-      const query = 'DELETE FROM todos WHERE id = $1 RETURNING *';
+      const query = "DELETE FROM todos WHERE id = $1 RETURNING *";
       const { rows } = await pool.query(query, [id]);
       return rows[0];
     } catch (error) {
-      console.error('Error deleting todo:', error);
+      console.error("Error deleting todo:", error);
       throw error;
     }
   },
@@ -84,8 +110,8 @@ export const TodoService = {
       const { rows } = await pool.query(query, [`%${searchTerm}%`]);
       return rows;
     } catch (error) {
-      console.error('Error searching todos:', error);
+      console.error("Error searching todos:", error);
       throw error;
     }
-  }
+  },
 };
