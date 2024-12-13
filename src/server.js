@@ -11,7 +11,7 @@ const port = process.env.PORT || 8000;
 // Enable CORS with specific origin
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000","http://54.247.225.12:3000/"],
     credentials: true,
   }),
 );
@@ -26,7 +26,7 @@ app.get("/health", (req, res) => {
 app.use("/todos", todoRoutes);
 
 // Error handling middleware
-app.use((err, req, res) => {
+app.use((err, req, res,next) => {
   console.error("Error:", err.message);
   console.error("Stack:", err.stack);
   res.status(500).json({
